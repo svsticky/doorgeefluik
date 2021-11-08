@@ -5,11 +5,10 @@ data IndexView = IndexView { routes :: [ Route ], newRoute :: Route, editId :: M
 
 instance View IndexView where
     html IndexView { .. } = [hsx|
-        <div class="grid grid-cols-9 p-20 table">
+        <div class="grid grid-cols-8 p-20 table">
         <h1 class="col-span-9">Doorgeefluiken</h1>
         <div class="col-span-3"><b>svsticky.nl/...</b></div>
         <div class="col-span-3"><b>url</b></div>
-        <div class="col-span-1"></div>
         <div class="col-span-1"></div>
         <div class="col-span-1"></div>
         {forEach routes (renderLoop editId)}
@@ -32,18 +31,17 @@ renderRouteEditable = renderForm
 renderRoute :: Route -> Html
 renderRoute route = [hsx|
     <div class="col-span-3"><p class="pd-2">{get #path route}</p></div>
-    <div class="col-span-3">{get #url route}</div>
-    <div class="col-span-1"><a href={VisitRouteAction (get #path route)}>Visit</a></div>
+    <div class="col-span-3"><a target="blank" href={VisitRouteAction (get #path route)}>{get #url route}</a></div>
     <div class="col-span-1"><a href={EditRouteAction (get #id route)} class="text-muted">Edit</a></div>
     <div class="col-span-1"><a href={DeleteRouteAction (get #id route)} class="js-delete text-muted">Delete</a></div>
 |]
 
 renderForm :: Route -> Html
-renderForm route = [hsx| <div class="col-span-9">{content}</div>|]
+renderForm route = [hsx| <div class="col-span-8">{content}</div>|]
     where content = formFor route [hsx|
-    <div class="grid grid-cols-9">
+    <div class="grid grid-cols-8">
         <div class="col-span-3">{(textField #path) { fieldLabel = ""}}</div>
         <div class="col-span-3">{(textField #url) { fieldLabel = ""}}</div>
-        <div class="col-span-3">{submitButton}</div>
+        <div class="col-span-2">{submitButton}</div>
     </div>
 |]
