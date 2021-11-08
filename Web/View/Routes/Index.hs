@@ -5,15 +5,13 @@ data IndexView = IndexView { routes :: [ Route ], newRoute :: Route, editId :: M
 
 instance View IndexView where
     html IndexView { .. } = [hsx|
-        <h1>Doorgeefluiken</h1>
-        <div class="container">
-        <div class="row">
-            <div class="col-3"><b>svsticky.nl/...</b></div>
-            <div class="col-3"><b>url</b></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-            <div class="col-2"></div>
-        </div>
+        <div class="grid grid-cols-9 p-20 table">
+        <h1 class="col-span-9">Doorgeefluiken</h1>
+        <div class="col-span-3"><b>svsticky.nl/...</b></div>
+        <div class="col-span-3"><b>url</b></div>
+        <div class="col-span-1"></div>
+        <div class="col-span-1"></div>
+        <div class="col-span-1"></div>
         {forEach routes (renderLoop editId)}
         {if (isNothing editId) then renderForm newRoute else ""}
         </div>
@@ -33,22 +31,19 @@ renderRouteEditable = renderForm
 
 renderRoute :: Route -> Html
 renderRoute route = [hsx|
-    <div class="row">
-        <div class="col-3 pd-2"><p class="pd-2">{get #path route}</p></div>
-        <div class="col-3">{get #url route}</div>
-        <div class="col-2"><a href={VisitRouteAction (get #path route)}>Visit</a></div>
-        <div class="col-2"><a href={EditRouteAction (get #id route)} class="text-muted">Edit</a></div>
-        <div class="col-2"><a href={DeleteRouteAction (get #id route)} class="js-delete text-muted">Delete</a></div>
-    </div>
+    <div class="col-span-3"><p class="pd-2">{get #path route}</p></div>
+    <div class="col-span-3">{get #url route}</div>
+    <div class="col-span-1"><a href={VisitRouteAction (get #path route)}>Visit</a></div>
+    <div class="col-span-1"><a href={EditRouteAction (get #id route)} class="text-muted">Edit</a></div>
+    <div class="col-span-1"><a href={DeleteRouteAction (get #id route)} class="js-delete text-muted">Delete</a></div>
 |]
 
 renderForm :: Route -> Html
-renderForm route = formFor route [hsx|
-    <div class="row">
-        <div class="col-4">{(textField #path) { fieldLabel = ""}}</div>
-        <div class="col-4">{(textField #url) { fieldLabel = ""}}</div>
-        <div class="col-2">{submitButton}</div>
-        <div class="col-2"></div>
-        <div class="col-2"></div>
+renderForm route = [hsx| <div class="col-span-9">{content}</div>|]
+    where content = formFor route [hsx|
+    <div class="grid grid-cols-9">
+        <div class="col-span-3">{(textField #path) { fieldLabel = ""}}</div>
+        <div class="col-span-3">{(textField #url) { fieldLabel = ""}}</div>
+        <div class="col-span-3">{submitButton}</div>
     </div>
 |]

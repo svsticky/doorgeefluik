@@ -1,0 +1,51 @@
+@tailwind base;
+
+@tailwind components;
+
+.btn {
+    @apply px-4 py-2 bg-blue-600 text-white rounded;
+}
+
+h1 {
+    display: block;
+    font-size: 2em;
+    margin-top: 0.67em;
+    margin-bottom: 0.67em;
+    margin-left: 0;
+    margin-right: 0;
+    font-weight: bold;
+}
+
+
+form > div {
+}
+
+.table > div {
+    @apply p-2;
+}
+
+.table > input {
+    @apply m-1;
+}
+
+form input {
+    @apply shadow;
+    @apply appearance-none;
+    @apply border;
+    @apply rounded;
+    @apply w-auto;
+    @apply py-2;
+    @apply px-3;
+    @apply text-gray-700;
+    @apply leading-tight;
+}
+
+form label {
+    @apply block;
+    @apply text-gray-700;
+    @apply text-sm;
+    @apply font-bold;
+    @apply mb-2;
+}
+
+@tailwind utilities;
