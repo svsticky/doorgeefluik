@@ -11,7 +11,6 @@ data StaticController = WelcomeAction deriving (Eq, Show, Data)
 
 data RoutesController
     = RoutesAction
-    | NewRouteAction
     | VisitRouteAction { path :: !Text }
     | CreateRouteAction
     | EditRouteAction { routeId :: !(Id Route) }
@@ -38,7 +37,7 @@ instance Parsable a => ParseUrl (a -> b) b where
     parseUrl' f =  f <$ string "/" <*> getParser
 
 instance ParseUrl a a where
-    parseUrl' x = (string "" <|> string "/") >> pure x
+    parseUrl' x = pure x
 
 parseAction s f = string "/" >> string s >> parseUrl' f
 
@@ -47,7 +46,6 @@ instance CanRoute RoutesController where
               <|> parseAction "visit" VisitRouteAction
               <|> parseAction "delete" DeleteRouteAction
               <|> parseAction "create" CreateRouteAction
-              <|> parseAction "new" NewRouteAction
               <|> parseAction "update" UpdateRouteAction
               <|> parseAction "" RoutesAction
 
@@ -58,4 +56,3 @@ instance HasPath RoutesController where
     pathTo (DeleteRouteAction id) = "/delete/" <> tshow id
     pathTo (UpdateRouteAction id) = "/update/" <> tshow id
     pathTo CreateRouteAction = "/create"
-    pathTo NewRouteAction = "/new"

@@ -2,20 +2,9 @@ module Web.Controller.Routes where
 
 import Web.Controller.Prelude
 import Web.View.Routes.Index
-import Web.View.Routes.New
-import Web.View.Routes.Edit
-import Web.View.Routes.Show
 
 instance Controller RoutesController where
-    action RoutesAction = do
-        routes <- query @Route |> fetch
-        let newRoute = newRecord
-        let editId = Nothing
-        render IndexView { .. }
-
-    action NewRouteAction = do
-        let route = newRecord
-        render NewView { .. }
+    action RoutesAction = defaultIndex >>= render
 
     action VisitRouteAction { path } = do
         route <- query @Route |> filterWhere (#path, path) |> fetchOne
@@ -31,8 +20,8 @@ instance Controller RoutesController where
         route <- fetch routeId
         route
             |> buildRoute
-            |> ifValid \case
-                Left route -> render EditView { .. }
+            >>= ifValid \case
+                Left route -> defaultIndex >>= render
                 Right route -> do
                     route <- route |> updateRecord
                     setSuccessMessage "Route updated"
@@ -42,12 +31,10 @@ instance Controller RoutesController where
         let route = newRecord @Route
         route
             |> buildRoute
-            |> ifValid \case
+            >>= ifValid \case
                 Left route -> do
-                    routes <- query @Route |> fetch
-                    let newRoute = route
-                    let editId = Nothing
-                    render IndexView { .. } 
+                    view <- defaultIndex 
+                    render (view { newRoute = route })
                 Right route -> do
                     route <- route |> createRecord
                     setSuccessMessage "Route created"
@@ -59,9 +46,17 @@ instance Controller RoutesController where
         setSuccessMessage "Route deleted"
         redirectTo RoutesAction
 
+defaultIndex :: (?modelContext :: ModelContext) => _
+defaultIndex = do
+    routes <- query @Route |> fetch
+    let newRoute = newRecord
+    let editId = Nothing
+    return IndexView { .. }
+
 buildRoute route = route
     |> fill @'["url"]
     |> fill @'["path"]
     |> validateField #url nonEmpty
     |> validateField #url isUrl
     |> validateField #path nonEmpty
+    |> validateIsUnique #path
