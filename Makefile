@@ -1,7 +1,7 @@
 ifneq ($(wildcard IHP/.*),)
 IHP = IHP/lib/IHP
 else
-IHP = $(shell dirname $$(which RunDevServer))/../lib/IHP
+IHP = $(shell dirname $$(which RunProdServer))/../lib/IHP
 endif
 
 CSS_FILES += ${IHP}/static/vendor/flatpickr.min.css
@@ -22,6 +22,8 @@ tailwind-dev:
 	ls tailwind/*.css|NODE_ENV=development entr npx tailwindcss build -i tailwind/app.css -o static/app.css -c tailwind/tailwind.config.js
 
 static/app.css:
-	NODE_ENV=production npm ci
-	NODE_ENV=production npx tailwindcss build -i tailwind/app.css -o static/app.css -c tailwind/tailwind.config.js --minify
+	# tailwindcss build
+	# NODE_ENV=production npm ci
+	# NODE_ENV=production npx tailwindcss build -i tailwind/app.css -o static/app.css -c tailwind/tailwind.config.js --minify
+	tailwindcss build -i tailwind/app.css -o static/app.css -c tailwind/tailwind.config.js --minify
 
