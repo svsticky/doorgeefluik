@@ -12,6 +12,7 @@ let
             text
             hlint
             p.ihp
+            load-env
         ];
         otherDeps = p: with p; [
             # Native dependencies, e.g. imagemagick
