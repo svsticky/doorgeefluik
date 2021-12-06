@@ -4,7 +4,7 @@ let
         ref = "refs/tags/v0.16.0";
     };
     node-env = import ./nodeenv.nix {};
-    haskellEnv = import "${ihp}/NixSupport/default.nix" {
+    haskellEnv = import ./Config/nix/ihp-default.nix {
         ihp = ihp;
         optimized = true;
         haskellDeps = p: with p; [
