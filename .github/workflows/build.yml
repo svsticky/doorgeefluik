@@ -1,0 +1,30 @@
+---
+name: "Build"
+on:
+  "pull_request"
+
+jobs:
+  build:
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - uses: "actions/checkout@v2"
+
+      - name: "install Nix"
+        uses: "cachix/install-nix-action@v12"
+
+      - name: "use project cache (pull and push) and IHP cache (pull only)"
+        uses: cachix/cachix-action@v10
+        with:
+          name: svsticky-doorgeefluik
+          authToken: ${{ secrets.CACHIX_API_KEY }}
+          extraPullNames: digitallyinduced
+
+      - name: "build doorgeefluik"
+        run: "nix-build"
+        # IHP expects <nixpkgs> to be present, so we set it to a release
+        # IHP doesn't actually use this, so it doesn't really matter which release this is
+        # see: https://github.com/digitallyinduced/ihp/blob/edca5f0b61b499cb214441ca2826affd5cb04563/NixSupport/make-nixpkgs-from-options.nix#L74
+        env:
+          NIX_PATH: nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-21.05.tar.gz
+
