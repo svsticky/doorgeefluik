@@ -1,7 +1,7 @@
 ifneq ($(wildcard IHP/.*),)
 IHP = IHP/lib/IHP
 else
-IHP = $(shell dirname $$(which RunProdServer))/../lib/IHP
+IHP = $(shell dirname $$(which RunDevServer))/../lib/IHP
 endif
 
 CSS_FILES += ${IHP}/static/vendor/flatpickr.min.css
