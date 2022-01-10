@@ -24,7 +24,7 @@ jobs:
           extraPullNames: digitallyinduced
 
       - name: "build doorgeefluik"
-        run: "nix-build"
+        run: "nix-build | tee release.txt"
         # IHP expects <nixpkgs> to be present, so we set it to a release
         # IHP doesn't actually use this, so it doesn't really matter which release this is
         # see: https://github.com/digitallyinduced/ihp/blob/edca5f0b61b499cb214441ca2826affd5cb04563/NixSupport/make-nixpkgs-from-options.nix#L74
@@ -32,6 +32,11 @@ jobs:
           NIX_PATH: nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-21.05.tar.gz
 
       - name: "print build path"
-        run: "nix-instantiate"
-        env:
-          NIX_PATH: nixpkgs=https://github.com/NixOS/nixpkgs/archive/nixos-21.05.tar.gz
+        run: "cat release.txt"
+
+      - name: "publish release"
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "release.txt"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
