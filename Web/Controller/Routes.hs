@@ -48,7 +48,7 @@ instance Controller RoutesController where
 
 defaultIndex :: (?modelContext :: ModelContext) => _
 defaultIndex = do
-    routes <- query @Route |> fetch
+    routes <- query @Route |> orderBy #path |> fetch
     let newRoute = newRecord
     let editId = Nothing
     return IndexView { .. }

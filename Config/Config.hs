@@ -7,8 +7,8 @@ import IHP.View.CSSFramework
 
 config :: ConfigBuilder
 config = do
-    option Production
-    option (AppHostname "localhost:1515")
+--    option Development
+--    option (AppHostname "localhost:1515")
     option tailwind
 
 

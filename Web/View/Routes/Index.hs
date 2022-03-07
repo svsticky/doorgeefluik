@@ -6,12 +6,14 @@ data IndexView = IndexView { routes :: [ Route ], newRoute :: Route, editId :: M
 instance View IndexView where
     html IndexView { .. } = [hsx|
         <div class="grid grid-cols-8 p-20 table">
-        <h1 class="col-span-9">Doorgeefluiken</h1>
+        <h1 class="col-span-9">Doorgeefluiken 🚪</h1>
         <div class="col-span-3"><b>svsticky.nl/...</b></div>
         <div class="col-span-3"><b>url</b></div>
         <div class="col-span-1"></div>
         <div class="col-span-1"></div>
-        {forEach routes (renderLoop editId)}
+        {forEach (filter isPoster routes) (renderLoop editId)}
+        <div class="col-span-8"><hr/></div>
+        {forEach (filter (not . isPoster) routes) (renderLoop editId)}
         {if (isNothing editId) then renderForm "create" newRoute else ""}
         </div>
 
@@ -20,6 +22,9 @@ instance View IndexView where
             breadcrumb = renderBreadcrumb
                 [ breadcrumbLink "Routes" RoutesAction
                 ]
+
+isPoster :: Route -> Bool
+isPoster Route {..} = "poster" `isPrefixOf` path
 
 renderLoop :: Maybe (Id Route) -> Route -> Html
 renderLoop Nothing route = renderRoute route
