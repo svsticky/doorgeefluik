@@ -12,4 +12,4 @@ CREATE TABLE IF NOT EXISTS routes (
     path TEXT NOT NULL UNIQUE
 );
 
-ALTER TABLE routes DROP CONSTRAINT routes_url_key;
+ALTER TABLE routes DROP CONSTRAINT IF EXISTS routes_url_key;
